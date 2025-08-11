@@ -8,13 +8,10 @@ export async function addTask(itemNumber: number, task: string, author: string, 
   }
 
   if ( itemNumber === null || author === null) {
-    console.log('ItenNumber:', itemNumber)
-    console.log('author:', author)
     return;
   }
 
   try {
-    console.log('Inside async set item...')
     await AsyncStorage.setItem('task-' + itemNumber, JSON.stringify(taskJSON))
   } catch (e) {
     console.log('Error adding task: ', e)
@@ -31,7 +28,6 @@ export async function changeTaskStatus(taskKey: string, task: string, author: st
   }
 
   try {
-    console.log('Inside async markTaskAsComplete item...', taskJSON)
     await AsyncStorage.setItem(taskKey, JSON.stringify(taskJSON))
   } catch (e) {
     console.log('Error updating task: ', e)
@@ -42,7 +38,6 @@ export async function changeTaskStatus(taskKey: string, task: string, author: st
 
 export async function removeTask(taskKey: string) {
   try {
-    console.log('Inside async delete item...')
     await AsyncStorage.removeItem(taskKey)
   } catch (e) {
     console.log('Error removing task: ', e)
@@ -53,7 +48,6 @@ export async function removeTask(taskKey: string) {
 
 export async function removeAllTasks() {
   try {
-    console.log('Inside async delete all item...')
     await AsyncStorage.clear()
   } catch (e) {
     console.log('Error removing all tasks: ', e)
@@ -65,16 +59,12 @@ export async function removeAllTasks() {
 export async function getTasks(filter = null) {
   try {
     const keys = await AsyncStorage.getAllKeys();
-    console.log('Inside GetAllKeys -- keys:', keys)
     const getTaskData = await AsyncStorage.multiGet(keys);
-    console.log('Inside GetAllKeys -- getTaskData:', getTaskData)
 
     const mappedData = getTaskData.map(([key, jsonString]) => {
       const parsed = JSON.parse(jsonString);
       return { key, ...parsed}
     })
-
-    console.log('Inside GetTasks -- after mapping: ', mappedData)
 
     return mappedData;
   }catch (e) {

@@ -25,8 +25,6 @@ type IndividualTaskProps = {
 export default function IndividualTask({taskKey, taskDesc, author, status, filter}: IndividualTaskProps) {
   const [ isComplete, toggleComplete ] = useState(status == 'active' ? true : false)
 
-  console.log(taskKey + " " + status)
-
   const updateTaskStatus = () => {
     if ( !isComplete ) {
       changeTaskStatus(taskKey, taskDesc, author, 'complete')

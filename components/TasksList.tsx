@@ -16,8 +16,6 @@ export function TasksList({taskData = [], setFilter}: TasksListProps) {
 
   var platform = Device.manufacturer;
 
-  console.log('tasklist filter readout: ', setFilter)
-
   // I would normally use Device Info from NPM, but due to having to use Expo, I had to change to 'expo-device'
   //
   // Device.manufacturer().then((manufacturer) => {

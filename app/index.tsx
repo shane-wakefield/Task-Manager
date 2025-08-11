@@ -22,10 +22,8 @@ export default async function HomeScreen() {
 
   useEffect(() => {
     getTasks().then(tasks => {
-      console.log('Inside the getTasks:', tasks)
       setTasks(tasks)
     })
-    console.log('Inside useEffect -- Index:', incomingTaskData)
   }, [] );
 
   useFocusEffect(
@@ -33,7 +31,6 @@ export default async function HomeScreen() {
       getTasks().then(tasks => {
       setTasks(tasks)
     })
-    console.log('Inside useEffect -- Index:', incomingTaskData)
     }, [])
   );
 

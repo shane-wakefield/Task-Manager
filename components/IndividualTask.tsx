@@ -1,36 +1,106 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import { GestureHandlerRootView, Pressable } from "react-native-gesture-handler";
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import Reanimated, {
+  SharedValue,
+  useAnimatedStyle
+} from 'react-native-reanimated';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from "react";
 
+// Helpers
+import { changeTaskStatus, removeTask } from "@/helpers/AsyncCRUD";
+
 var borderColour = 'black'
 
-export default function IndividualTask() {
-  const [ complete, toggleComplete ] = useState(false)
-  const [ deleteTask, setToDelete ] = useState(false)
+type IndividualTaskProps = {
+  taskKey: string;
+  taskDesc: string;
+  author: string;
+  status: "active" | "complete";
+  filter: string
+}
+
+export default function IndividualTask({taskKey, taskDesc, author, status, filter}: IndividualTaskProps) {
+  const [ isComplete, toggleComplete ] = useState(status == 'active' ? true : false)
+
+  console.log(taskKey + " " + status)
+
+  const updateTaskStatus = () => {
+    if ( !isComplete ) {
+      changeTaskStatus(taskKey, taskDesc, author, 'complete')
+    } else {
+      changeTaskStatus(taskKey, taskDesc, author, 'active')
+    }
+  }
+
+  const deleteTaskFromStorage = () => {
+    Alert.alert('Confirm Delete', 'Are you sure you want to remove `' + taskDesc + '`?', [
+      {
+        text: 'OK',
+        onPress: () => removeTask(taskKey)
+      },
+      {
+        text: 'Cancel',
+        onPress: () => { return }
+      },
+    ]);
+  }
+
+  function RightAction(prog: SharedValue<number>, drag: SharedValue<number>) {
+    const styleAnimation = useAnimatedStyle(() => {
+
+      return {
+        transform: [{ translateX: drag.value + 50 }],
+      };
+    });
+
+    return (
+      <Reanimated.View style={styleAnimation}>
+        <View style={styles.rightAction}>
+          <Pressable
+            onPress={() => {
+              deleteTaskFromStorage()
+            }}
+          >
+            <Ionicons name="trash-sharp" size={35} color="red" />
+          </Pressable>
+        </View>
+      </Reanimated.View>
+    )
+  }
+
+  // let filter = 'active'
 
   return (
-    <GestureHandlerRootView style={styles.taskBox}>
-      <Text style={styles.taskDescription}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut egestas, orci id tristique</Text>
-      <Text style={styles.taskAuthor}>Shane</Text>
-      <View style={styles.taskActions}>
-        <Pressable
-          onPress={() => toggleComplete(complete => !complete)}
-          onPressOut={() => {
-            console.log('OnPressOut initiated')
-            deleteTask ? borderColour = 'red' : borderColour = 'red';
-            console.log('Border colour:', borderColour)
-          }}
-          onLongPress={() => {
-            console.log("Long press detected");
-            setToDelete(true)
-          }}
-        >
-          {complete ? <Ionicons name="checkmark-circle" size={30} color="green" /> : <Ionicons name="checkmark-circle-outline" size={30} color="grey" />}
-        </Pressable>
-      </View>
-    </GestureHandlerRootView>
+    <>
+      {
+        filter === status || 'all' && (
+          <GestureHandlerRootView style={styles.taskBox}>
+            <ReanimatedSwipeable
+              childrenContainerStyle={styles.swipeable}
+              friction={2}
+              rightThreshold={70}
+              renderRightActions={RightAction}
+            >
+              <Text style={styles.taskDescription}>{taskDesc}</Text>
+              <Text style={styles.taskAuthor}>{author}</Text>
+              <View style={styles.taskActions}>
+                <Pressable
+                  onPress={() => {
+                    toggleComplete(isComplete => !isComplete);
+                    updateTaskStatus();
+                  }}
+                >
+                  {isComplete ? <Ionicons name="checkmark-circle" size={30} color="green" /> : <Ionicons name="checkmark-circle-outline" size={30} color="grey" />}
+                </Pressable>
+              </View>
+            </ReanimatedSwipeable>
+          </GestureHandlerRootView>
+        )
+      }
+    </>
   )
 }
 
@@ -50,19 +120,29 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   taskDescription: {
-    // backgroundColor: 'blue',
+    width: '60%',
     textAlign: 'left',
     textAlignVertical: 'center',
-    width: '60%'
   },
   taskAuthor: {
     textAlign: 'center',
-    // backgroundColor: 'yellow',
     width: '20%'
   },
   taskActions: {
-    // backgroundColor: 'red',
     alignItems: 'center',
     width: '20%'
-  }
+  },
+  rightAction: { 
+    width: 50, 
+    height: 70,
+    justifyContent: 'center',
+    alignContent: 'center'
+  },
+  swipeable: {
+    flexDirection: 'row',
+    height: 70,
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })

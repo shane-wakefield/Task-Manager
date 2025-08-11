@@ -38,13 +38,3 @@ I have also begun to implement a team collaboration function, but letting task c
 **Production Readiness** - I feel this project could benefit from more time dedicated to the overall logistics of moving task data from one component to another. This is possibly where I would look to implement Redux, to handle the mutations and changes done to the tasks in different components and for different reasons (like changing tasks status for example). I would also have liked more time to go through and implement more stricter type casting and validating. I was restricted by some difficulty I ran into with satifying promise expectations when trying to pass task data from the helper file to the TasksList. As for App Store readiness, I feel my choice in colours and simplistic design could use some tinkering. I would want to implement a dark and light mode throughout the app, and possible colour schemes for users to pick their favourite colour palettes (especially if the goal of the app is to be their go-to app for task management, UI customisation sounds like an easy win)
 
 All in all, I have enjoyed working through this challenge and getting to grips with a framework I'm not very familiar with, and would spend some time going back through and tweaking parts as I learn more.
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
